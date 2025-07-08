@@ -10,37 +10,37 @@ namespace ConsoleApp3
             
             Pixel[,] testData0 = new Pixel[,]
             {
-                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333) },
-                { new Pixel(2,2222,3333), new Pixel(5,22222,33333),new Pixel(8,222222,333333) },
-                { new Pixel(3,8,9), new Pixel(6,88,99),new Pixel(9,888,999) },
+                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 168) },
+                { new Pixel(2,2222,15), new Pixel(5,55,132),new Pixel(8,190,97) },
+                { new Pixel(3,8,9), new Pixel(6,88,34),new Pixel(9,180,90) },
             };
             Pixel[,] testData = new Pixel[,]
             {
-                { new Pixel(1,2,3), new Pixel(11,22,33),new Pixel(111,222, 333), new Pixel(1111,2222,3333), new Pixel(11111,22222,33333),new Pixel(111111,222222,333333) },
-                { new Pixel(7,8,9), new Pixel(77,88,99),new Pixel(777,888,999) , new Pixel(7777,8888,9999), new Pixel(77777,88888,99999),new Pixel(777777,888888,999999) },
-                { new Pixel(4,5,6), new Pixel(44,55,66),new Pixel(444,555,666),  new Pixel(4444,5555,6666), new Pixel(44444,55555,66666),new Pixel(444444,555555,666666) }
+                { new Pixel(1,2,3), new Pixel(11,22,33),new Pixel(111,222, 70), new Pixel(10,60,240), new Pixel(19,31,180),new Pixel(22,204,30) },
+                { new Pixel(7,8,9), new Pixel(77,88,99),new Pixel(56,57,80) , new Pixel(11,61,241), new Pixel(15,200,181),new Pixel(23,208,31) },
+                { new Pixel(4,5,6), new Pixel(44,55,66),new Pixel(21,58,81),  new Pixel(12,30,242), new Pixel(18,201,182),new Pixel(24,209,32) }
             };
             Pixel[,] testData1 = new Pixel[,]
             {
-                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333) }, 
-                { new Pixel(2,2222,3333), new Pixel(5,22222,33333),new Pixel(8,222222,333333) },
-                { new Pixel(3,8,9), new Pixel(6,88,99),new Pixel(9,888,999) }, 
-                { new Pixel(3,8888,9999), new Pixel(4,88888,99999),new Pixel(7,888888,999999) },
-                { new Pixel(2,5,6), new Pixel(5,55,66),new Pixel(8,555,666) }, 
-                { new Pixel(1,5555,6666), new Pixel(6,55555,66666),new Pixel(9,555555,666666) }
+                { new Pixel(1,2,3), new Pixel(11,22,33),new Pixel(111,222, 70) },
+                { new Pixel(7,8,9), new Pixel(77,88,99),new Pixel(56,57,80) },
+                { new Pixel(4,5,6), new Pixel(44,55,66),new Pixel(21,58,81) }, 
+                { new Pixel(10,60,240), new Pixel(19,31,180),new Pixel(22,204,30) },
+                { new Pixel(11,61,241), new Pixel(15,200,181),new Pixel(23,208,31) }, 
+                { new Pixel(12,30,242), new Pixel(18,201,182),new Pixel(24,209,32) }
             };
             Pixel[,] testData2 = new Pixel[,]
             {
-                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333), new Pixel(1,2222,3333) },
-                { new Pixel(2,8,9), new Pixel(6,88,99),new Pixel(8,888,999) , new Pixel(3,8888,9999) },
-                { new Pixel(3,5,6), new Pixel(5,55,66),new Pixel(9,555,666),  new Pixel(2,5555,6666) }
+                { new Pixel(1,2,3), new Pixel(10,60,240), new Pixel(19,31,180),new Pixel(22,204,30) },
+                { new Pixel(2,8,9), new Pixel(11,61,241), new Pixel(15,200,181),new Pixel(23,208,31) },
+                { new Pixel(3,5,6), new Pixel(5,30,242), new Pixel(18,201,182),new Pixel(24,209,32) }
             };
             Pixel[,] testData3 = new Pixel[,]
             {
                 { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333) },
-                { new Pixel(2,2222,3333), new Pixel(5,22222,33333),new Pixel(8,222222,333333) },
-                { new Pixel(3,8,9), new Pixel(6,88,99),new Pixel(9,888,999) },
-                { new Pixel(1,8888,9999), new Pixel(4,88888,99999),new Pixel(7,888888,999999) }
+                { new Pixel(2,60,240), new Pixel(19,31,180),new Pixel(22,204,30) },
+                { new Pixel(3,5,6), new Pixel(5,30,242), new Pixel(18,201,182) },
+                { new Pixel(1,2,3), new Pixel(10,60,240), new Pixel(19,31,180) }
             };
             MedianFiltration(testData0);
             MedianFiltration(testData);
@@ -51,15 +51,31 @@ namespace ConsoleApp3
 
         public class Pixel
         {
-            public int red;
-            public int green;
-            public int blue;
+            private int _red;
+            private int _green;
+            private int _blue;
+
+            public int Red
+            {
+                get => _red;
+                set => _red = value > 255 ? 255 : value;
+            }
+            public int Green
+            {
+                get => _green;
+                set => _green = value > 255 ? 255 : value;
+            }
+            public int Blue
+            {
+                get => _blue;
+                set => _blue = value > 255 ? 255 : value;
+            }
 
             public Pixel(int red, int green, int blue)
             {
-                this.red = red;
-                this.green = green;
-                this.blue = blue;
+                this.Red = red;
+                this.Green = green;
+                this.Blue = blue;
             }
         }
 
@@ -123,9 +139,9 @@ namespace ConsoleApp3
             {
                 for (int xSliceWindow = 0; xSliceWindow < 3; xSliceWindow++)
                 {
-                    redPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].red;
-                    greenPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].green;
-                    bluePartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].blue;
+                    redPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].Red;
+                    greenPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].Green;
+                    bluePartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].Blue;
                 }
             }
             //Сортируем
