@@ -41,70 +41,73 @@ namespace ConsoleApp3
             }
         }
 
-        public static Pixel[,] MedianFiltration(Pixel[,] data)
-        {
-            return MedianFiltrationAlgorythm(data);
-        }
-
-        public static Pixel[,] MedianFiltrationAlgorythm(Pixel[,] pixeles)
+        public static Pixel[,] MedianFiltration(Pixel[,] pixeles)
         {
             //Количество строк и столбцов в результирующем массиве(res)
             int resX, resY;
+            //Количество строк и столбцов в исходном массиве
+            int dataX = pixeles.GetLength(1);
+            int dataY = pixeles.GetLength(0);
             //Логика подсчета количества строк и столбцов в результирующем массиве
             //в res должно быть строк/столбцов втрое меньше, чем в изначальном, но в случае если строки/столбцы изначального массива
             //не делятся нацело на 3, то увеличиваем на 1 количество столбцов/строк в res
-            resY = pixeles.GetLength(0) % 3 == 0 ? pixeles.GetLength(0) / 3 : pixeles.GetLength(0) / 3 + 1;
-            resX = pixeles.GetLength(1) % 3 == 0 ? pixeles.GetLength(1) / 3 : pixeles.GetLength(1) / 3 + 1;
+            resY = dataY % 3 == 0 ? dataY / 3 : dataY / 3 + 1;
+            resX = dataX % 3 == 0 ? dataX / 3 : dataX / 3 + 1;
             //Результирующий массив
             Pixel[,] res = new Pixel[resY, resX];
 
 
-            //Массивы для вычисления медиан в скользящих окнах(SliceWindow)
-            int[] redPartOfPixelesFromSliceWindow = new int[9];
-            int[] greenPartOfPixelesFromSliceWindow = new int[9];
-            int[] bluePartOfPixelesFromSliceWindow = new int[9];
-
-            //Переменные для хранения медиан
-            int redMedian;
-            int greenMedian;
-            int blueMedian;
-
-
-            //Объявление переменных для циклов, чтобы не путаться
-            int dataX = pixeles.GetLength(1);
-            int dataY = pixeles.GetLength(0);
+            
             //Первые 2 цикла двигают скользящее окно(SliceWindow),
-            //Следующие 2 цикла проходят по скользящему окну и вычисляют медиану для каждого цвета
             for (int y = 0; y < dataY; y += 3)
             {
                 for (int x = 0; x < dataX; x += 3)
                 {
-                    //Проходим по скользящему окну и наполняем наши массивы для вычисления медиан
+                    //Формируем скользящее окно
+                    Pixel[] arr = new Pixel[9];
                     for (int ySliceWindow = 0; ySliceWindow < 3; ySliceWindow++)
                     {
                         for (int xSliceWindow = 0; xSliceWindow < 3; xSliceWindow++)
                         {
-                            redPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow*3] = pixeles[y + ySliceWindow, x + xSliceWindow].red;
-                            greenPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow*3] = pixeles[y + ySliceWindow, x + xSliceWindow].green;
-                            bluePartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow*3] = pixeles[y + ySliceWindow, x + xSliceWindow].blue;
+                            arr[ySliceWindow * 3 + xSliceWindow] = pixeles[y + ySliceWindow, x + xSliceWindow];
                         }
                     }
-                    //Сортируем
-                    Array.Sort(redPartOfPixelesFromSliceWindow);
-                    Array.Sort(greenPartOfPixelesFromSliceWindow);
-                    Array.Sort(bluePartOfPixelesFromSliceWindow);
-                    //Вычисляем медиану
-                    redMedian = redPartOfPixelesFromSliceWindow[4];
-                    greenMedian = greenPartOfPixelesFromSliceWindow[4];
-                    blueMedian = bluePartOfPixelesFromSliceWindow[4];
-                    //Формируем новый пиксель
-                    Pixel pixel = new Pixel(redMedian, greenMedian, blueMedian);
+                    //Вычисляем медианный пиксель
+                    Pixel pixel = MedianFiltrationAlgorythm(arr);
                     //Добавляем пиксель в результирующий массив
                     res[y/3, x/3] = pixel;
                 }
             }
 
             return res;
+        }
+
+        public static Pixel MedianFiltrationAlgorythm(Pixel[] pixeles)
+        {
+
+            //Массивы для вычисления медиан в скользящих окнах(SliceWindow)
+            int[] redPartOfPixelesFromSliceWindow = new int[9];
+            int[] greenPartOfPixelesFromSliceWindow = new int[9];
+            int[] bluePartOfPixelesFromSliceWindow = new int[9];
+
+            //Проходим по скользящему окну и наполняем наши массивы для вычисления медиан
+            for (int ySliceWindow = 0; ySliceWindow < 3; ySliceWindow++)
+            {
+                for (int xSliceWindow = 0; xSliceWindow < 3; xSliceWindow++)
+                {
+                    redPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].red;
+                    greenPartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].green;
+                    bluePartOfPixelesFromSliceWindow[xSliceWindow + ySliceWindow * 3] = pixeles[ySliceWindow * 3 + xSliceWindow].blue;
+                }
+            }
+            //Сортируем
+            Array.Sort(redPartOfPixelesFromSliceWindow);
+            Array.Sort(greenPartOfPixelesFromSliceWindow);
+            Array.Sort(bluePartOfPixelesFromSliceWindow);
+            //Формируем новый пиксель
+            Pixel resPixel = new Pixel(redPartOfPixelesFromSliceWindow[4], greenPartOfPixelesFromSliceWindow[4], bluePartOfPixelesFromSliceWindow[4]);
+
+            return resPixel;
         }
     }
 }
