@@ -7,7 +7,13 @@ namespace ConsoleApp3
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-
+            
+            Pixel[,] testData0 = new Pixel[,]
+            {
+                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333) },
+                { new Pixel(2,2222,3333), new Pixel(5,22222,33333),new Pixel(8,222222,333333) },
+                { new Pixel(3,8,9), new Pixel(6,88,99),new Pixel(9,888,999) },
+            };
             Pixel[,] testData = new Pixel[,]
             {
                 { new Pixel(1,2,3), new Pixel(11,22,33),new Pixel(111,222, 333), new Pixel(1111,2222,3333), new Pixel(11111,22222,33333),new Pixel(111111,222222,333333) },
@@ -23,8 +29,24 @@ namespace ConsoleApp3
                 { new Pixel(2,5,6), new Pixel(5,55,66),new Pixel(8,555,666) }, 
                 { new Pixel(1,5555,6666), new Pixel(6,55555,66666),new Pixel(9,555555,666666) }
             };
+            Pixel[,] testData2 = new Pixel[,]
+            {
+                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333), new Pixel(1,2222,3333) },
+                { new Pixel(2,8,9), new Pixel(6,88,99),new Pixel(8,888,999) , new Pixel(3,8888,9999) },
+                { new Pixel(3,5,6), new Pixel(5,55,66),new Pixel(9,555,666),  new Pixel(2,5555,6666) }
+            };
+            Pixel[,] testData3 = new Pixel[,]
+            {
+                { new Pixel(1,2,3), new Pixel(4,22,33),new Pixel(7,222, 333) },
+                { new Pixel(2,2222,3333), new Pixel(5,22222,33333),new Pixel(8,222222,333333) },
+                { new Pixel(3,8,9), new Pixel(6,88,99),new Pixel(9,888,999) },
+                { new Pixel(1,8888,9999), new Pixel(4,88888,99999),new Pixel(7,888888,999999) }
+            };
+            MedianFiltration(testData0);
             MedianFiltration(testData);
             MedianFiltration(testData1);
+            MedianFiltration(testData2);
+            MedianFiltration(testData3);
         }
 
         public class Pixel
@@ -43,26 +65,32 @@ namespace ConsoleApp3
 
         public static Pixel[,] MedianFiltration(Pixel[,] pixeles)
         {
-            //Количество строк и столбцов в результирующем массиве(res)
-            int resX, resY;
             //Количество строк и столбцов в исходном массиве
             int dataX = pixeles.GetLength(1);
             int dataY = pixeles.GetLength(0);
-            //Логика подсчета количества строк и столбцов в результирующем массиве
+            //Объявление количества строк в результирующем массиве
+            //Логика подсчета количества строк и столбцов в результирующем массиве:
             //в res должно быть строк/столбцов втрое меньше, чем в изначальном, но в случае если строки/столбцы изначального массива
             //не делятся нацело на 3, то увеличиваем на 1 количество столбцов/строк в res
-            resY = dataY % 3 == 0 ? dataY / 3 : dataY / 3 + 1;
-            resX = dataX % 3 == 0 ? dataX / 3 : dataX / 3 + 1;
+            int resY = dataY % 3 == 0 ? dataY / 3 : dataY / 3 + 1;
+            int resX = dataX % 3 == 0 ? dataX / 3 : dataX / 3 + 1;
             //Результирующий массив
             Pixel[,] res = new Pixel[resY, resX];
-
-
             
             //Первые 2 цикла двигают скользящее окно(SliceWindow),
             for (int y = 0; y < dataY; y += 3)
             {
                 for (int x = 0; x < dataX; x += 3)
                 {
+                    //Если количество столбцов/строк исходного массива не делится на 3, то двигаем последнее в столбце/строке скользящее окно
+                    if (dataX - x < 3)
+                    {
+                        x -= 3 - dataX % x;
+                    }
+                    if (dataY - y < 3)
+                    {
+                        y -= 3 - dataY % y;
+                    }
                     //Формируем скользящее окно
                     Pixel[] arr = new Pixel[9];
                     for (int ySliceWindow = 0; ySliceWindow < 3; ySliceWindow++)
@@ -74,8 +102,8 @@ namespace ConsoleApp3
                     }
                     //Вычисляем медианный пиксель
                     Pixel pixel = MedianFiltrationAlgorythm(arr);
-                    //Добавляем пиксель в результирующий массив
-                    res[y/3, x/3] = pixel;
+                    //Добавляем пиксель в результирующий массив; +2 берется для случая, если количество столбцов/строк исходного массива не делится на 3
+                    res[(y + 2)/3, (x + 2)/3] = pixel;
                 }
             }
 
